@@ -4,36 +4,77 @@ using System.Runtime.CompilerServices;
 class Node
 {
     public int Value { get; private set; }
-    public int Height {get; private set; }
+    public int Height { get; private set; }
     public Node? Left;
     public Node? Right;
     public Node? Parent;
+    public void DecrementHight()
+    {
+        Height--;
+    }
     public void IncrementHeight()
     {
-        if(Left!=null){
-        if (Height<=Left.Height)
+        if (Left != null)
         {
-            Height++;
+            if (Right != null)
+            {
+                if (Height > Left.Height + 1 && Height > Right.Height + 1)
+                {
+                    if(Left.Height > Right.Height)
+                    {
+                        Height = Left.Height+1;
+                    }
+                    else
+                    {
+                        Height = Right.Height+1;
+                    }
+                }
+                else if (Height <= Left.Height || Height <= Right.Height)
+                {
+                    Height++;
+                }
+            }
+            else
+            {
+                if (Height <= Left.Height)
+                {
+                    Height++;
+                }
+            }
         }
-        }else if (Right != null)
+        else if (Right != null)
         {
-            if(Height <= Right.Height)
+            if (Height <= Right.Height)
             {
                 Height++;
             }
         }
-        
+        else
+        {
+            Height = 0;
+        }
+
+
         if (Parent != null)
         {
-            Parent.IncrementHeight();
+            if (Parent.Height <= Height)
+            {
+                Parent.IncrementHeight();
+            }
         }
     }
+
     public Node RotateRight(Node input)
     {
         Node newRoot = input.Left;
         Node temp = newRoot.Right;
         newRoot.Right = input;
         input.Left = temp;
+
+        newRoot.Parent = input.Parent;
+        newRoot.Right.Height = newRoot.Right.Height - 2;
+        newRoot.Right.Parent = newRoot;
+        newRoot.Right.IncrementHeight();
         return newRoot;
     }
     public Node RotateLeft(Node input)
@@ -42,9 +83,15 @@ class Node
         Node temp = newRoot.Left;
         newRoot.Left = input;
         input.Right = temp;
+
+        newRoot.Parent = input.Parent;
+        newRoot.Left.Height = newRoot.Left.Height - 2;
+        newRoot.Left.Parent = newRoot;
+        newRoot.Left.IncrementHeight();
+
         return newRoot;
     }
-    public Node(int value,int height, Node? left = null, Node? right = null,Node? parent = null)
+    public Node(int value, int height, Node? left = null, Node? right = null, Node? parent = null)
     {
         Value = value;
         Height = height;
@@ -62,7 +109,7 @@ class BinaryTree
     {
         if (root == null)
         {
-            root = new Node(value,0);
+            root = new Node(value, 0);
         }
         else
         {
@@ -73,10 +120,10 @@ class BinaryTree
     {
         return nodeValue(root);
     }
-    public int Height()
-    {
-        return nodeHeight(root);
-    }
+    // public int Height()
+    // {
+    //     return nodeHeight(root);
+    // }
     public string ToMermaid()
     {
         if (root == null)
@@ -92,12 +139,6 @@ class BinaryTree
     //Private functions
     private void checkNodeInsert(ref Node inputNode, int value)
     {
-        // if (inputNode.Value == 0)
-        // {
-        //     inputNode = new Node(value, inputNode.Left, inputNode.Right);
-        // }
-        // else
-        // {
         if (value < inputNode.Value)
         {
             if (inputNode.Left != null)
@@ -110,8 +151,9 @@ class BinaryTree
                     }
                     else
                     {
-                        inputNode.Right = new Node(value,0,null,null,inputNode);
+                        inputNode.Right = new Node(value, 0, null, null, inputNode);
                         inputNode.IncrementHeight();
+
                     }
                 }
                 else
@@ -119,12 +161,13 @@ class BinaryTree
                     checkNodeInsert(ref inputNode.Left, value);
                 }
 
-                // if(inputNode.Right.Height > inputNode.Left.Height)
+
             }
             else
             {
-                inputNode.Left = new Node(value,0,null,null,inputNode);
+                inputNode.Left = new Node(value, 0, null, null, inputNode);
                 inputNode.IncrementHeight();
+
             }
         }
         if (value > inputNode.Value)
@@ -135,11 +178,13 @@ class BinaryTree
             }
             else
             {
-                inputNode.Right = new Node(value,0,null,null,inputNode);
+                inputNode.Right = new Node(value, 0, null, null, inputNode);
                 inputNode.IncrementHeight();
+
             }
         }
-        // }
+
+        checkRotate(ref inputNode);
     }
     private string nodeValue(Node inputNode)
     {
@@ -243,4 +288,36 @@ class BinaryTree
         }
         return returnValue;
     }
+
+    private void checkRotate(ref Node inputNode)
+    {
+        Node ReplacementNode = null;
+        if (inputNode.Left != null)
+        {
+            if (inputNode.Right != null)
+            {
+                if (inputNode.Right.Height > inputNode.Left.Height + 1)
+                {
+                    inputNode = inputNode.RotateLeft(inputNode);
+                }
+                else if (inputNode.Left.Height > inputNode.Right.Height + 1)
+                {
+                    inputNode = inputNode.RotateRight(inputNode);
+                }
+            }
+            else if (inputNode.Left.Height > 0)
+            {
+                inputNode = inputNode.RotateRight(inputNode);
+            }
+        }
+        else
+            if (inputNode.Right != null)
+            {
+                if (inputNode.Right.Height > 0)
+                {
+                    inputNode = inputNode.RotateLeft(inputNode);
+                }
+            }
+    }
+
 }
