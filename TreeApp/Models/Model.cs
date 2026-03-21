@@ -6,12 +6,14 @@ class Node
     public int Height {get; private set; }
     public Node? Left;
     public Node? Right;
-    public Node(int value,int height, Node? left = null, Node? right = null)
+    public Node? Parent;
+    public Node(int value,int height, Node? left = null, Node? right = null,Node? parent = null)
     {
         Value = value;
         Height = height;
         Left = left;
         Right = right;
+        Parent = parent;
     }
 }
 
@@ -71,7 +73,7 @@ class BinaryTree
                     }
                     else
                     {
-                        inputNode.Right = new Node(value,inputNode.Height+1);
+                        inputNode.Right = new Node(value,inputNode.Height+1,null,null,inputNode);
                     }
                 }
                 else
@@ -81,7 +83,7 @@ class BinaryTree
             }
             else
             {
-                inputNode.Left = new Node(value,inputNode.Height+1);
+                inputNode.Left = new Node(value,inputNode.Height+1,null,null,inputNode);
             }
         }
         if (value > inputNode.Value)
@@ -92,7 +94,7 @@ class BinaryTree
             }
             else
             {
-                inputNode.Right = new Node(value,inputNode.Height+1);
+                inputNode.Right = new Node(value,inputNode.Height+1,null,null,inputNode);
             }
         }
         // }
