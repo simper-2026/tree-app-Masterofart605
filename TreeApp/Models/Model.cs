@@ -3,11 +3,13 @@ using System.Net.Http.Headers;
 class Node
 {
     public int Value { get; private set; }
+    public int Height {get; private set; }
     public Node? Left;
     public Node? Right;
-    public Node(int value, Node? left = null, Node? right = null)
+    public Node(int value,int height, Node? left = null, Node? right = null)
     {
         Value = value;
+        Height = height;
         Left = left;
         Right = right;
     }
@@ -21,7 +23,7 @@ class BinaryTree
     {
         if (root == null)
         {
-            root = new Node(value);
+            root = new Node(value,0);
         }
         else
         {
@@ -44,7 +46,7 @@ class BinaryTree
         }
         if (root.Left == null && root.Right == null)
         {
-            return $"graph TD\n {root.Value}";
+            return $"graph TD\n {root.Value}[{root.Value} h:{root.Height}]";
         }
         return "graph TD\n " + buildMermaidLooper(root);
     }
@@ -69,7 +71,7 @@ class BinaryTree
                     }
                     else
                     {
-                        inputNode.Right = new Node(value);
+                        inputNode.Right = new Node(value,inputNode.Height+1);
                     }
                 }
                 else
@@ -79,7 +81,7 @@ class BinaryTree
             }
             else
             {
-                inputNode.Left = new Node(value);
+                inputNode.Left = new Node(value,inputNode.Height+1);
             }
         }
         if (value > inputNode.Value)
@@ -90,7 +92,7 @@ class BinaryTree
             }
             else
             {
-                inputNode.Right = new Node(value);
+                inputNode.Right = new Node(value,inputNode.Height+1);
             }
         }
         // }
@@ -180,19 +182,19 @@ class BinaryTree
         string leftString = "";
         string rightValue = "";
         string rightString = "";
-        string returnValue = "";
+        string returnValue = $"{inputNode.Value}[{inputNode.Value} h:{inputNode.Height}] \n";
         if (childExitsts(inputNode, true) == true)
         {
             leftValue = inputNode.Left.Value.ToString();
             leftString = buildMermaidLooper(inputNode.Left);
-            thisNodeString = $"{inputNode.Value} --> {leftValue}\n";
+            thisNodeString = $"{inputNode.Value} --> {leftValue}[ {leftValue} h:{inputNode.Left.Height} ]\n";
             returnValue = returnValue + thisNodeString + leftString;
         }
         if (childExitsts(inputNode, false) == true)
         {
             rightValue = inputNode.Right.Value.ToString();
             rightString = buildMermaidLooper(inputNode.Right);
-            thisNodeString = $"{inputNode.Value} --> {rightValue}\n";
+            thisNodeString = $"{inputNode.Value} --> {rightValue}[ {rightValue} h:{inputNode.Right.Height} ]\n";
             returnValue = returnValue + thisNodeString + rightString;
         }
         return returnValue;
