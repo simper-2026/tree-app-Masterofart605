@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 
 class Node
 {
@@ -7,6 +8,22 @@ class Node
     public Node? Left;
     public Node? Right;
     public Node? Parent;
+    public Node RotateRight(Node input)
+    {
+        Node newRoot = input.Left;
+        Node temp = newRoot.Right;
+        newRoot.Right = input;
+        input.Left = temp;
+        return newRoot;
+    }
+    public Node RotateLeft(Node input)
+    {
+        Node newRoot = input.Right;
+        Node temp = newRoot.Left;
+        newRoot.Left = input;
+        input.Right = temp;
+        return newRoot;
+    }
     public Node(int value,int height, Node? left = null, Node? right = null,Node? parent = null)
     {
         Value = value;
