@@ -36,6 +36,10 @@ class Node
             }
             else
             {
+                if(Height > Left.Height + 1)
+                {
+                    Height = Left.Height+1;
+                }
                 if (Height <= Left.Height)
                 {
                     Height++;
@@ -44,6 +48,10 @@ class Node
         }
         else if (Right != null)
         {
+            if(Height > Right.Height + 1)
+            {
+                Height=Right.Height+1;
+            }
             if (Height <= Right.Height)
             {
                 Height++;
@@ -57,10 +65,9 @@ class Node
 
         if (Parent != null)
         {
-            if (Parent.Height <= Height)
-            {
+
                 Parent.IncrementHeight();
-            }
+
         }
     }
 
@@ -74,6 +81,10 @@ class Node
         newRoot.Parent = input.Parent;
         newRoot.Right.Height = newRoot.Right.Height - 2;
         newRoot.Right.Parent = newRoot;
+        if (newRoot.Parent != null)
+        {
+        newRoot.Parent.Left=newRoot;
+        }
         newRoot.Right.IncrementHeight();
         return newRoot;
     }
@@ -87,6 +98,10 @@ class Node
         newRoot.Parent = input.Parent;
         newRoot.Left.Height = newRoot.Left.Height - 2;
         newRoot.Left.Parent = newRoot;
+        if (newRoot.Parent != null)
+        {
+        newRoot.Parent.Right=newRoot;
+        }
         newRoot.Left.IncrementHeight();
 
         return newRoot;
