@@ -8,6 +8,26 @@ class Node
     public Node? Left;
     public Node? Right;
     public Node? Parent;
+    public void IncrementHeight()
+    {
+        if(Left!=null){
+        if (Height<=Left.Height)
+        {
+            Height++;
+        }
+        }else if (Right != null)
+        {
+            if(Height <= Right.Height)
+            {
+                Height++;
+            }
+        }
+        
+        if (Parent != null)
+        {
+            Parent.IncrementHeight();
+        }
+    }
     public Node RotateRight(Node input)
     {
         Node newRoot = input.Left;
@@ -90,17 +110,21 @@ class BinaryTree
                     }
                     else
                     {
-                        inputNode.Right = new Node(value,inputNode.Height+1,null,null,inputNode);
+                        inputNode.Right = new Node(value,0,null,null,inputNode);
+                        inputNode.IncrementHeight();
                     }
                 }
                 else
                 {
                     checkNodeInsert(ref inputNode.Left, value);
                 }
+
+                // if(inputNode.Right.Height > inputNode.Left.Height)
             }
             else
             {
-                inputNode.Left = new Node(value,inputNode.Height+1,null,null,inputNode);
+                inputNode.Left = new Node(value,0,null,null,inputNode);
+                inputNode.IncrementHeight();
             }
         }
         if (value > inputNode.Value)
@@ -111,7 +135,8 @@ class BinaryTree
             }
             else
             {
-                inputNode.Right = new Node(value,inputNode.Height+1,null,null,inputNode);
+                inputNode.Right = new Node(value,0,null,null,inputNode);
+                inputNode.IncrementHeight();
             }
         }
         // }
@@ -143,32 +168,32 @@ class BinaryTree
         }
         return leftValue + " " + rightValue + " " + thisValue;
     }
-    private int nodeHeight(Node? inputNode, int Height = -1)
-    {
-        if (inputNode == null)
-        {
-            return Height;
-        }
-        int leftHeight = Height;
-        int rightHeight = Height;
-        if (childExitsts(inputNode, true) == true)
-        {
-            leftHeight = nodeHeight(inputNode.Left, Height + 1);
-        }
-        if (childExitsts(inputNode, false) == true)
-        {
-            rightHeight = nodeHeight(inputNode.Right, Height + 1);
-        }
-        if (leftHeight > rightHeight)
-        {
-            return leftHeight;
-        }
-        else
-        {
-            return rightHeight;
-        }
+    // private int nodeHeight(Node? inputNode, int Height = -1)
+    // {
+    //     if (inputNode == null)
+    //     {
+    //         return Height;
+    //     }
+    //     int leftHeight = Height;
+    //     int rightHeight = Height;
+    //     if (childExitsts(inputNode, true) == true)
+    //     {
+    //         leftHeight = nodeHeight(inputNode.Left, Height + 1);
+    //     }
+    //     if (childExitsts(inputNode, false) == true)
+    //     {
+    //         rightHeight = nodeHeight(inputNode.Right, Height + 1);
+    //     }
+    //     if (leftHeight > rightHeight)
+    //     {
+    //         return leftHeight;
+    //     }
+    //     else
+    //     {
+    //         return rightHeight;
+    //     }
 
-    }
+    // }
     private bool childExitsts(Node inputNode, bool isLeft)
     {
         if (isLeft == true)
